@@ -1,60 +1,26 @@
-import type { Tareas } from "../types/tareas";
-const URI = "/api/tasks";
+const URI = "http://localhost:3000/api/tasks";
 
-export const getAllTasks = async () => {
-  try {
-    const response = await fetch(URI);
-    if (!response.ok) throw new Error("Error al obtener las tareas");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error al obtener las tareas");
-  }
+export const getTasks = async () => {
+  const res = await fetch(URI);
+  if (!res.ok) throw new Error("Error al obtener tareas");
+  return res.json();
 };
 
-export const createTask = async (task: Tareas) => {
-  try {
-    const response = await fetch(URI, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(task),
-    });
-    if (!response.ok) throw new Error("Error al crear la tarea");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al crear la tarea");
-  }
+export const createTask = async (task) => {
+  const res = await fetch(URI, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(task),
+  });
+  if (!res.ok) throw new Error("Error al crear tarea");
+  return res.json();
 };
 
-export const updateTask = async (id: string, task: Tareas) => {
-  try {
-    const response = await fetch(`${URI}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(task),
-    });
-    if (!response.ok) throw new Error("Error al editar las tareas");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al editar las tareas");
-  }
+export const deleteTask = async (id) => {
+  const res = await fetch(`${URI}/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Error al eliminar tarea");
+  return res.json();
 };
 
-export const deleteTask = async (id: string) => {
-  try {
-    const response = await fetch(`${URI}/${id}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) throw new Error("Error al eliminar la tarea");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al eliminar la tarea");
-  }
-};

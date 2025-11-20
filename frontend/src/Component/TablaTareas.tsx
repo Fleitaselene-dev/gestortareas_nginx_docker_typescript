@@ -1,39 +1,45 @@
 import Button from "./button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getTasks, deleteTask } from "../Services/task";
+import type { ITask } from "../types/tareas";
 
 export default function TablaTareas() {
-  const [tareas, setTareas] = useState([
-    { id: 1, titulo: "Tarea 1", descripcion: "Revisar reportes", estado: "Pendiente" },
-    { id: 2, titulo: "Tarea 2", descripcion: "Enviar correo al cliente", estado: "Completado" },
-  ]);
-   const handleEdit = () => alert("Editar");
-  const handleDDelete = () => alert("Eliminar");
+const [tareas, setTareas] = useState<ITask[]>([]);
 
-  // const eliminarTarea = (id) => {
-  //   setTareas(tareas.filter((t) => t.id !== id));
-  // };
+  const cargarTareas = async () => {
+    const data = await getTasks();
+    setTareas(data);
+  };
+
+  useEffect(() => {
+    cargarTareas();
+  }, []);
+
+  const handleDelete = async (id) => {
+    await deleteTask(id);
+    cargarTareas(); // refresca lista
+  };
 
   return (
     <div className="p-6">
-      <table className="border-3  ">
-        <thead className="gap-12 border-2">
-          <tr >
+      <table className="border-3">
+        <thead>
+          <tr>
             <th className="border-2 p-1">Tarea</th>
-            <th className="border-2 p-1">descripcion</th>
-             <th className="border-2 p-1">Estado</th>
+            <th className="border-2 p-1">Descripción</th>
+            <th className="border-2 p-1">Estado</th>
             <th className="border-2 p-1">Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          {tareas.map((tarea) => (
-            <tr key={tarea.id}>
-              <td className="border-2 p-1">{tarea.titulo}</td>
-              <td className="border-2 p-1">{tarea.descripcion}</td>
-               <td className="border-2 p-1">{tarea.estado}</td>
-              <td className="border-2 p-1 gap-4">
-   <Button label="Editar" onClick={handleEdit}/>
-   <Button label="Eliminar" onClick={handleDDelete}/>
+          {tareas.map((t) => (
+            <tr key={t.id}>
+              <td className="border-2 p-1">{t.title}</td>
+              <td className="border-2 p-1">{t.description}</td>
+              <td className="border-2 p-1">{t.status ? "Completado" : "Pendiente"}</td>
+              <td className="border-2 p-1">
+                <Button label="Eliminar" onClick={() => handleDelete(t.id)} />
               </td>
             </tr>
           ))}
@@ -42,5 +48,4 @@ export default function TablaTareas() {
     </div>
   );
 }
-
 

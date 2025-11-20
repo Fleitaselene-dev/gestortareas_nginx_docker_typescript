@@ -1,7 +1,6 @@
-export type Tareas = {
-    id:number;
-    titulo:string;
-    descripcion:string;
-    estado: "Pendiente" | "Completado";
-    
+export interface ITask {
+    id?: string,
+    title: string,
+    description: string,
+    status: boolean
 }
